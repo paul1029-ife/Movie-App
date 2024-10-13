@@ -1,18 +1,16 @@
-import { useState, ChangeEvent } from "react";
-import SearchBar from "./components/SearchBar";
-import MovieList from "./components/Weather";
+import Header from "./components/Header";
+import MovieList from "./components/MovieList";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
-  const [searchTerm, setsearchTerm] = useState<string>("london");
-
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    setsearchTerm(e.target.value);
-  };
+  const queryClient = new QueryClient()
 
   return (
     <>
-      <SearchBar handleSearch={handleSearch} />
-      <MovieList searchTerm={searchTerm}/>
+    <QueryClientProvider  client={queryClient}>
+      <Header />
+      <MovieList />
+      </QueryClientProvider>
     </>
   );
 }
