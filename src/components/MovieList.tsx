@@ -38,6 +38,20 @@ const MovieList: React.FC = () => {
     enabled: false 
   });
 
+  useEffect(() => {
+    const search = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        refetch();
+      }
+    };
+
+    window.addEventListener("keydown", search);
+
+    return () => {
+      window.removeEventListener("keydown", search);
+    };
+  }, [refetch]);
+
   const totalPages: number = data?.totalResults ? Math.ceil(parseInt(data.totalResults) / itemsPerPage) : 0;
 
   // Refetch data when the page changes
