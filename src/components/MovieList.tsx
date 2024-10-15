@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { useQuery } from "@tanstack/react-query";
-import MovieCard from './MovieCard';  // Make sure this path is correct
+import MovieCard from './MovieCard';
 import API_KEY from "../assets/API_KEY";
+import { useSearch } from '../context/SearchContext';
 
 interface Movie {
   imdbID: string;
@@ -19,7 +20,7 @@ interface MovieResponse {
 }
 
 const MovieList: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const { searchTerm } = useSearch();
   const [page, setPage] = useState<number>(1);
   const itemsPerPage: number = 20;
 
@@ -29,42 +30,23 @@ const MovieList: React.FC = () => {
       const [, searchTerm, page] = queryKey;
       if (!searchTerm) return { Search: [], totalResults: "0", Response: "False", Error: "No search term provided" };
       const response = await axios.get<MovieResponse>(
-        `http://www.omdbapi.com/?apikey=${API_KEY as string}=${encodeURIComponent(
+        `http://www.omdbapi.com/?apikey=${API_KEY as string}&s=${encodeURIComponent(
           searchTerm as string
         )}&page=${page}`
       );
       return response.data;
     },
-    enabled: false 
+    enabled: Boolean(searchTerm)
   });
 
   useEffect(() => {
-    const search = (e: KeyboardEvent) => {
-      if (e.key === 'Enter') {
-        refetch();
-      }
-    };
-
-    window.addEventListener("keydown", search);
-
-    return () => {
-      window.removeEventListener("keydown", search);
-    };
-  }, [refetch]);
-
-  const totalPages: number = data?.totalResults ? Math.ceil(parseInt(data.totalResults) / itemsPerPage) : 0;
-
-  // Refetch data when the page changes
-  useEffect(() => {
     if (searchTerm) {
+      setPage(1);
       refetch();
     }
-  }, [page, refetch]);
+  }, [searchTerm, refetch]);
 
-  const handleSearch = (): void => {
-    setPage(1);
-    refetch();
-  };
+  const totalPages: number = data?.totalResults ? Math.ceil(parseInt(data.totalResults) / itemsPerPage) : 0;
 
   const handlePrevPage = (): void => {
     setPage((prev) => Math.max(prev - 1, 1));
@@ -76,23 +58,6 @@ const MovieList: React.FC = () => {
 
   return (
     <div className="p-4">
-      <div className="mb-4 flex">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
-          placeholder="Search for movies..."
-          className="mr-2 flex-grow px-2 py-1 border border-gray-300 rounded"
-        />
-        <button
-          onClick={handleSearch}
-          disabled={isLoading}
-          className="px-4 py-1 bg-gray-800 text-white rounded disabled:bg-blue-300"
-        >
-          {isLoading ? "Searching..." : "Search"}
-        </button>
-      </div>
-
       {isLoading && <div className="text-center">Loading...</div>}
       {error && <p className="text-red-500 text-center">{error.message}</p>}
       {data?.Error && <p className="text-red-500 text-center">{data.Error}</p>}
