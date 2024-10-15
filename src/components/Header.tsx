@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Header: React.FC = () => {
   return (
@@ -6,22 +7,22 @@ const Header: React.FC = () => {
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
         <div className="text-2xl font-bold">
-          <a href="/" className="hover:text-blue-500 transition-colors duration-300">
+          <Link to="/" className="hover:text-blue-500 transition-colors duration-300">
             MovieSearch
-          </a>
+          </Link>
         </div>
 
         {/* Navigation Links */}
         <nav className="space-x-4 hidden md:flex">
-          <a href="/" className="hover:text-blue-500 transition-colors duration-300">
+          <Link to="/" className="hover:text-blue-500 transition-colors duration-300">
             Home
-          </a>
-          <a href="/popular" className="hover:text-blue-500 transition-colors duration-300">
+          </Link>
+          <Link to="/popular" className="hover:text-blue-500 transition-colors duration-300">
             Popular
-          </a>
-          <a href="/favorites" className="hover:text-blue-500 transition-colors duration-300">
+          </Link>
+          <Link to="/favorites" className="hover:text-blue-500 transition-colors duration-300">
             Favorites
-          </a>
+          </Link>
         </nav>
 
         {/* Mobile Menu Icon */}
