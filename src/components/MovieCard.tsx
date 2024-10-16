@@ -1,12 +1,24 @@
 import React from 'react';
+import { useFavorites } from '../context/FavoritesContext';
 
 interface MovieCardProps {
+  imdbID: string;
   title: string;
   year: string;
   poster: string;
 }
 
-const MovieCard: React.FC<MovieCardProps> = ({ title, year, poster }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ imdbID, title, year, poster }) => {
+  const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
+
+  const handleFavoriteClick = () => {
+    if (isFavorite(imdbID)) {
+      removeFromFavorites(imdbID);
+    } else {
+      addToFavorites({ imdbID, Title: title, Year: year, Poster: poster });
+    }
+  };
+
   return (
     <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
       <img
@@ -18,6 +30,14 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, year, poster }) => {
         <h3 className="text-lg font-semibold mb-2 truncate">{title}</h3>
         <p className="text-sm text-gray-600">{year}</p>
       </div>
+      <button 
+        onClick={handleFavoriteClick}
+        className={`w-full py-2 text-white ${
+          isFavorite(imdbID) ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'
+        } transition-colors duration-300`}
+      >
+        {isFavorite(imdbID) ? 'Remove from favorites' : 'Add to favorites'}
+      </button>
     </div>
   );
 };

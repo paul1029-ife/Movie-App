@@ -5,32 +5,41 @@ import HomePage from "./pages/HomePage.tsx";
 import "./index.css";
 import Favorites from "./pages/Favorites.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Popular from "./pages/Popular.tsx";
 import { SearchProvider } from "./context/SearchContext.tsx";
+import { FavoritesProvider } from "./context/FavoritesContext.tsx";
+import PopularMovies from "./pages/Popular.tsx";
+import Header from "./components/Header.tsx";
 
- const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
-    errorElement: <div>404 error, This page does not exist</div>
+    element: <Header />,
+    errorElement: <div>404 error, This page does not exist</div>,
+    children: [
+      {
+        path: "/",
+        element: <HomePage />,
+      },
+      {
+        path: "/favorites",
+        element: <Favorites />,
+      },
+      {
+        path: "/popular",
+        element: <PopularMovies />,
+      },
+    ],
   },
-  {
-    path: "/favorites",
-    element: <Favorites />,
-  },
-  {
-    path: "/popular",
-    element: <Popular /> 
-  }
-  
 ]);
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <SearchProvider >
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <SearchProvider>
+      <FavoritesProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </FavoritesProvider>
     </SearchProvider>
   </StrictMode>
 );

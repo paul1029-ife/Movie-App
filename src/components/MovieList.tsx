@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { useQuery } from "@tanstack/react-query";
 import MovieCard from './MovieCard';
+import LandingPage from './LandingPage';
 import API_KEY from "../assets/API_KEY";
 import { useSearch } from '../context/SearchContext';
 
@@ -19,7 +20,11 @@ interface MovieResponse {
   Error?: string;
 }
 
-const MovieList: React.FC = () => {
+interface MovieListProps {
+  focusSearch: () => void;
+}
+
+const MovieList: React.FC<MovieListProps> = ({ focusSearch }) => {
   const { searchTerm } = useSearch();
   const [page, setPage] = useState<number>(1);
   const itemsPerPage: number = 20;
@@ -28,7 +33,7 @@ const MovieList: React.FC = () => {
     queryKey: ["movies", searchTerm, page],
     queryFn: async ({ queryKey }) => {
       const [, searchTerm, page] = queryKey;
-      if (!searchTerm) return { Search: [], totalResults: "0", Response: "False", Error: "No search term provided" };
+      if (!searchTerm) return { Search: [], totalResults: "0", Response: "False" };
       const response = await axios.get<MovieResponse>(
         `http://www.omdbapi.com/?apikey=${API_KEY as string}&s=${encodeURIComponent(
           searchTerm as string
@@ -61,6 +66,8 @@ const MovieList: React.FC = () => {
       {isLoading && <div className="text-center">Loading...</div>}
       {error && <p className="text-red-500 text-center">{error.message}</p>}
       {data?.Error && <p className="text-red-500 text-center">{data.Error}</p>}
+      
+      {!searchTerm && <LandingPage focusSearch={focusSearch} />}
 
       {data?.Search && data.Search.length > 0 && (
         <div>
@@ -68,6 +75,7 @@ const MovieList: React.FC = () => {
             {data.Search.map((movie: Movie) => (
               <MovieCard
                 key={movie.imdbID}
+                imdbID={movie.imdbID}
                 title={movie.Title}
                 year={movie.Year}
                 poster={movie.Poster}
