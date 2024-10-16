@@ -20,11 +20,9 @@ interface MovieResponse {
   Error?: string;
 }
 
-interface MovieListProps {
-  focusSearch: () => void;
-}
 
-const MovieList: React.FC<MovieListProps> = ({ focusSearch }) => {
+
+const MovieList: React.FC = () => {
   const { searchTerm } = useSearch();
   const [page, setPage] = useState<number>(1);
   const itemsPerPage: number = 20;
@@ -67,7 +65,7 @@ const MovieList: React.FC<MovieListProps> = ({ focusSearch }) => {
       {error && <p className="text-red-500 text-center">{error.message}</p>}
       {data?.Error && <p className="text-red-500 text-center">{data.Error}</p>}
       
-      {!searchTerm && <LandingPage focusSearch={focusSearch} />}
+      {!searchTerm && <LandingPage />}
 
       {data?.Search && data.Search.length > 0 && (
         <div>
