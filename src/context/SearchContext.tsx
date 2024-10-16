@@ -18,7 +18,7 @@ export const SearchProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   };
 
   return (
-    <SearchContext.Provider value={{ searchTerm, setSearchTerm, handleSearch }}>
+    <SearchContext.Provider value={{ searchTerm, setSearchTerm, handleSearch}}>
       {children}
     </SearchContext.Provider>
   );

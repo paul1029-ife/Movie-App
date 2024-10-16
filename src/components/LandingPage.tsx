@@ -2,11 +2,8 @@ import React from 'react';
 import { Search, Film, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-interface LandingPageProps {
-  focusSearch: () => void;
-}
 
-const LandingPage: React.FC<LandingPageProps> = ({ focusSearch }) => {
+const LandingPage: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
       <h1 className="text-4xl font-bold mb-6 text-gray-800">Welcome to MovieSearch</h1>
@@ -17,7 +14,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ focusSearch }) => {
           icon={<Search className="w-12 h-12 text-blue-500" />}
           title="Search"
           description="Find movies by title, actor, or director"
-          onClick={focusSearch}
         />
         <Link to={"popular"}>
         <FeatureCard 
@@ -47,13 +43,11 @@ interface FeatureCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
-  onClick?: () => void;
 }
 
-const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, onClick }) => (
+const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description}) => (
   <div 
     className="bg-white p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg cursor-pointer"
-    onClick={onClick}
   >
     <div className="flex justify-center mb-4">{icon}</div>
     <h2 className="text-xl font-semibold mb-2">{title}</h2>

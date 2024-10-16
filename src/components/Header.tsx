@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Link, useNavigate, Outlet } from "react-router-dom";
 import { useSearch } from "../context/SearchContext";
 
 const Header: React.FC = () => {
   const { searchTerm, setSearchTerm, handleSearch } = useSearch();
-  
+  const [isOpened, setIsOpened] = useState(false);
+  const focusSearch = useRef(null)
   const navigate = useNavigate()
   const onSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleSearch();
   };
+
 
   return (
     <div>
@@ -32,6 +34,7 @@ const Header: React.FC = () => {
           >
             <input
               type="text"
+              ref={focusSearch}
               onFocus={() => navigate("/")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -70,7 +73,7 @@ const Header: React.FC = () => {
 
           {/* Mobile Menu Icon */}
           <div className="md:hidden">
-            <button className="focus:outline-none">
+            <button className="focus:outline-none" onClick={() => setIsOpened(!isOpened)}>
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -86,6 +89,17 @@ const Header: React.FC = () => {
                 ></path>
               </svg>
             </button>
+            {
+                isOpened && 
+                <div className="text-center ">
+                    <Link to="/" className="block py-2 pl-3 transition-colors duration-300
+                    hover:text-blue-500">Home</Link>
+                    <Link to="/popular" className="block py-2 pl-3 transition-colors duration-300
+                    hover:text-blue-500">Popular</Link>
+                    <Link to="/favorites" className="block py-2 pl-3 transition-colors duration-300
+                    hover:text-blue-500">Favorites</Link>
+                </div>
+            }
           </div>
         </div>
       </header>
