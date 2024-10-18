@@ -1,4 +1,4 @@
-import { GenreThemes, MoviesByGenre } from '../types/movie';
+import { GenreThemes } from '../types/movie';
 
 export const GENRE_THEMES: GenreThemes = {
   Action: {

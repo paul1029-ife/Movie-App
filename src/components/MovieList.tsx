@@ -5,8 +5,6 @@ import MovieCard from './MovieCard';
 import LandingPage from './LandingPage';
 import API_KEY from "../assets/API_KEY"; // Ensure API_KEY is typed correctly
 import { useSearch } from '../context/SearchContext';
-import { AnimatePresence } from "framer-motion";
-import { MovieModal } from "./MovieModal";
 
 interface Movie {
   imdbID: string;
@@ -24,7 +22,6 @@ interface MovieResponse {
 
 const MovieList: React.FC = () => {
   const { searchTerm } = useSearch();
-  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [page, setPage] = useState<number>(1);
   const itemsPerPage: number = 20;
 
@@ -84,27 +81,9 @@ const MovieList: React.FC = () => {
                 title={movie.Title}
                 year={movie.Year}
                 poster={movie.Poster}
-                onMovieSelect={() => setSelectedMovie} // Set selected movie on click
               />
             ))}
           </div>
-
-          {/* Show the movie modal when a movie is selected */}
-          <AnimatePresence>
-            {selectedMovie && (
-              <MovieModal
-                movie={selectedMovie}
-                onClose={() => setSelectedMovie(null)} // Close modal on click
-                theme={{
-                  primary: "bg-blue-500",
-                  secondary: "bg-gray-200",
-                  text: "text-black",
-                  hover: "hover:bg-blue-600",
-                  gradient: "bg-gradient-to-r from-blue-400 to-blue-600"
-                }} // Fixed the theme properties
-              />
-            )}
-          </AnimatePresence>
 
           {/* Pagination Controls */}
           <div className="flex justify-between items-center mt-4">

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { GenreSectionProps } from '../types/movie';
 import { sortMovies } from '../utils/sorting';
@@ -6,20 +6,11 @@ import { sortMovies } from '../utils/sorting';
 export const GenreSection: React.FC<GenreSectionProps> = ({
   genre,
   movies,
-  isExpanded,
-  onExpandToggle,
   onMovieSelect,
   sortBy
 }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const sortedMovies = sortMovies(movies, sortBy);
-
-  // Scroll handling logic
-  useEffect(() => {
-    if (sectionRef.current && isExpanded) {
-      sectionRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [isExpanded]);
 
   return (
     <motion.section
@@ -31,15 +22,7 @@ export const GenreSection: React.FC<GenreSectionProps> = ({
     >
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold">{genre}</h2>
-        <button
-          onClick={onExpandToggle}
-          className="text-sm text-blue-500 hover:underline"
-        >
-          {isExpanded ? 'Collapse' : 'Expand'}
-        </button>
       </div>
-
-      {isExpanded && (
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {sortedMovies.map((movie) => (
             <div
@@ -56,7 +39,6 @@ export const GenreSection: React.FC<GenreSectionProps> = ({
             </div>
           ))}
         </div>
-      )}
     </motion.section>
   );
 };

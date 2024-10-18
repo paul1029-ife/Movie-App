@@ -1,30 +1,29 @@
-import React, { useState } from 'react';
-import { useQueries } from '@tanstack/react-query';
-import { AnimatePresence } from 'framer-motion';
-import { Movie, SortOption } from '../types/movie';
-import { GENRE_THEMES } from '../constants/theme';
-import { MOVIES_BY_GENRE } from '../constants/data';
-import { fetchMovie } from '../utils/api';
-import { MovieModal } from '../components/MovieModal';
-import { SearchBar } from '../components/SearchBar';
-import { SortControls } from '../components/SortControls';
-import { GenreFilter } from '../components/GenreFilter';
-import { GenreSection } from '../components/GenreSection';
-import { filterMovies, sortMovies } from '../utils/sorting'; // Helper functions to filter and sort movies
+import React, { useState } from "react";
+import { useQueries } from "@tanstack/react-query";
+import { AnimatePresence } from "framer-motion";
+import { Movie, SortOption } from "../types/movie";
+import { GENRE_THEMES } from "../constants/theme";
+import { MOVIES_BY_GENRE } from "../constants/data";
+import { fetchMovie } from "../utils/api";
+import { MovieModal } from "../components/MovieModal";
+import { SearchBar } from "../components/SearchBar";
+import { SortControls } from "../components/SortControls";
+import { GenreFilter } from "../components/GenreFilter";
+import { GenreSection } from "../components/GenreSection";
+import { filterMovies, sortMovies } from "../utils/sorting"; // Helper functions to filter and sort movies
 
 const ExplorePage: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
-  const [expandedGenre, setExpandedGenre] = useState<string | null>(null);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
-  const [sortBy, setSortBy] = useState<SortOption>('default');
+  const [sortBy, setSortBy] = useState<SortOption>("default");
 
   // Fetch movies using react-query
   const movieQueries = useQueries({
     queries: Object.values(MOVIES_BY_GENRE)
       .flat()
       .map((title) => ({
-        queryKey: ['movie', title],
+        queryKey: ["movie", title],
         queryFn: () => fetchMovie(title),
         staleTime: Infinity,
       })),
@@ -33,9 +32,16 @@ const ExplorePage: React.FC = () => {
   // Handle loading and error states
   const isLoading = movieQueries.some((query) => query.isLoading);
   const isError = movieQueries.some((query) => query.isError);
-  const movies = movieQueries.map((query) => query.data).filter(Boolean) as Movie[];
+  const movies = movieQueries
+    .map((query) => query.data)
+    .filter(Boolean) as Movie[];
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="text-center w-full h-[100vh] flex justify-center items-center font-bold text-3xl ">
+        Loading<span className="animate-pulse">...</span>
+      </div>
+    );
   if (isError) return <div>Error loading movies.</div>;
 
   // Filter and sort movies based on selected genre and search query
@@ -43,7 +49,9 @@ const ExplorePage: React.FC = () => {
   const sortedMovies = sortMovies(filteredMovies, sortBy);
 
   // Determine genres to display (if selectedGenre is null, display all)
-  const genresToShow = selectedGenre ? [selectedGenre] : Object.keys(MOVIES_BY_GENRE);
+  const genresToShow = selectedGenre
+    ? [selectedGenre]
+    : Object.keys(MOVIES_BY_GENRE);
 
   return (
     <>
@@ -62,15 +70,12 @@ const ExplorePage: React.FC = () => {
         <AnimatePresence>
           {genresToShow.map((genre) => (
             <GenreSection
-              key={genre}
               genre={genre}
-              movies={sortedMovies.filter((movie) => MOVIES_BY_GENRE[genre].includes(movie.Title))}
-              theme={GENRE_THEMES[genre]}
-              isExpanded={expandedGenre === genre}
-              onExpandToggle={() => setExpandedGenre(expandedGenre === genre ? null : genre)}
+              movies={sortedMovies.filter((movie) => MOVIES_BY_GENRE[genre].includes(movie.Title)
+              )}
               onMovieSelect={setSelectedMovie}
-              sortBy={sortBy}
-            />
+              sortBy={sortBy} 
+                     />
           ))}
         </AnimatePresence>
       </div>
@@ -81,7 +86,9 @@ const ExplorePage: React.FC = () => {
           <MovieModal
             movie={selectedMovie}
             onClose={() => setSelectedMovie(null)}
-            theme={selectedGenre ? GENRE_THEMES[selectedGenre] : GENRE_THEMES.Drama}
+            theme={
+              selectedGenre ? GENRE_THEMES[selectedGenre] : GENRE_THEMES.Drama
+            }
           />
         )}
       </AnimatePresence>

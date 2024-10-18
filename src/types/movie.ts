@@ -67,9 +67,6 @@ export interface Movie {
   export interface GenreSectionProps {
     genre: string;
     movies: Movie[];
-    theme: GenreTheme;
-    isExpanded: boolean;
-    onExpandToggle: () => void;
     onMovieSelect: (movie: Movie) => void;
     sortBy: SortOption;
   }
