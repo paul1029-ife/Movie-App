@@ -7,8 +7,8 @@ import Favorites from "./pages/Favorites.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SearchProvider } from "./context/SearchContext.tsx";
 import { FavoritesProvider } from "./context/FavoritesContext.tsx";
-import PopularMovies from "./pages/Popular.tsx";
 import Header from "./components/Header.tsx";
+import ExplorePage from "./pages/Explore.tsx";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -27,7 +27,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/popular",
-        element: <PopularMovies />,
+        element: <ExplorePage />,
       },
     ],
   },

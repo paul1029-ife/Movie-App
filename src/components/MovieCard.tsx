@@ -6,9 +6,10 @@ interface MovieCardProps {
   title: string;
   year: string;
   poster: string;
+  onMovieSelect: (movie: { imdbID: string; title: string; year: string; poster: string }) => void; // New prop
 }
 
-const MovieCard: React.FC<MovieCardProps> = ({ imdbID, title, year, poster }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ imdbID, title, year, poster, onMovieSelect }) => {
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
 
   const handleFavoriteClick = () => {
@@ -19,8 +20,16 @@ const MovieCard: React.FC<MovieCardProps> = ({ imdbID, title, year, poster }) =>
     }
   };
 
+  // Trigger the movie selection when the card is clicked
+  const handleCardClick = () => {
+    onMovieSelect({ imdbID, title, year, poster });
+  };
+
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md">
+    <div
+      className="border border-gray-200 rounded-lg overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md cursor-pointer"
+      onClick={handleCardClick} // On click, the movie is selected
+    >
       <img
         src={poster !== "N/A" ? poster : `https://via.placeholder.com/300x450?text=${encodeURIComponent(title)}`}
         alt={`${title} poster`}
