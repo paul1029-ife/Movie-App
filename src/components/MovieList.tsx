@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { useQuery } from "@tanstack/react-query";
-import MovieCard from './MovieCard';
-import LandingPage from './LandingPage';
-import API_KEY from "../assets/API_KEY"; // Ensure API_KEY is typed correctly
-import { useSearch } from '../context/SearchContext';
+import MovieCard from "./MovieCard";
+import LandingPage from "./LandingPage";
+import API_KEY from "../assets/API_KEY";
+import { useSearch } from "../context/SearchContext";
 
 interface Movie {
   imdbID: string;
@@ -25,39 +25,40 @@ const MovieList: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const itemsPerPage: number = 20;
 
-  // React Query to fetch data from OMDb API
-  const { data, error, isLoading, refetch } = useQuery<MovieResponse, AxiosError>({
+  const { data, error, isLoading, refetch } = useQuery<
+    MovieResponse,
+    AxiosError
+  >({
     queryKey: ["movies", searchTerm, page],
     queryFn: async ({ queryKey }) => {
       const [, searchTerm, page] = queryKey;
-      if (!searchTerm) return { Search: [], totalResults: "0", Response: "False" };
+      if (!searchTerm)
+        return { Search: [], totalResults: "0", Response: "False" };
       const response = await axios.get<MovieResponse>(
-        `http://www.omdbapi.com/?apikey=${API_KEY as string}&s=${encodeURIComponent(
-          (searchTerm as string).trim()
-        )}&page=${page}`
+        `http://www.omdbapi.com/?apikey=${
+          API_KEY as string
+        }&s=${encodeURIComponent((searchTerm as string).trim())}&page=${page}`
       );
       return response.data;
     },
-    enabled: Boolean(searchTerm) // Fetch only if searchTerm exists
+    enabled: Boolean(searchTerm),
   });
 
-  // Refetch movies on search term change
   useEffect(() => {
     if (searchTerm) {
-      setPage(1); // Reset page to 1 for new search term
-      refetch();  // Refetch movies based on new search term
+      setPage(1);
+      refetch();
     }
   }, [searchTerm, refetch]);
 
-  // Calculate total number of pages based on the results
-  const totalPages: number = data?.totalResults ? Math.ceil(parseInt(data.totalResults) / itemsPerPage) : 0;
+  const totalPages: number = data?.totalResults
+    ? Math.ceil(parseInt(data.totalResults) / itemsPerPage)
+    : 0;
 
-  // Handle previous page click
   const handlePrevPage = (): void => {
     setPage((prev) => Math.max(prev - 1, 1));
   };
 
-  // Handle next page click
   const handleNextPage = (): void => {
     setPage((prev) => Math.min(prev + 1, totalPages));
   };
@@ -67,8 +68,8 @@ const MovieList: React.FC = () => {
       {isLoading && <div className="text-center">Loading...</div>}
       {error && <p className="text-red-500 text-center">{error.message}</p>}
       {data?.Error && <p className="text-red-500 text-center">{data.Error}</p>}
-      
-      {!searchTerm && <LandingPage />} {/* Show landing page if no search term */}
+
+      {!searchTerm && <LandingPage />}
 
       {data?.Search && data.Search.length > 0 && (
         <div>

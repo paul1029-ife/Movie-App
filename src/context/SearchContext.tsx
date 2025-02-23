@@ -24,6 +24,7 @@ export const SearchProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useSearch = () => {
   const context = useContext(SearchContext);
   if (context === undefined) {
