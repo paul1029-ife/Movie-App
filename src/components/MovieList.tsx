@@ -35,7 +35,7 @@ const MovieList: React.FC = () => {
       if (!searchTerm)
         return { Search: [], totalResults: "0", Response: "False" };
       const response = await axios.get<MovieResponse>(
-        `http://www.omdbapi.com/?apikey=${
+        `https://www.omdbapi.com/?apikey=${
           API_KEY as string
         }&s=${encodeURIComponent((searchTerm as string).trim())}&page=${page}`
       );
